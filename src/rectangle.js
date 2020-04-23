@@ -36,6 +36,7 @@ class Rectangle extends FabricCanvasTool {
       evented: false,
       strokeUniform: true,
       noScaleCache : false,
+      hasRotatingPoint: false,
       angle: 0
     });
     canvas.add(this.rect);
