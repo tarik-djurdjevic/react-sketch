@@ -26,6 +26,7 @@ class Line extends FabricCanvasTool {
       originX: 'center',
       originY: 'center',
       selectable: false,
+      hasRotatingPoint: false,
       evented: false
     });
     canvas.add(this.line);
