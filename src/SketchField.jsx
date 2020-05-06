@@ -22,6 +22,8 @@ const fabric = require('fabric').fabric;
  */
 class SketchField extends PureComponent {
 
+  
+
   static propTypes = {
     // the color of the line
     lineColor: PropTypes.string,
@@ -107,7 +109,13 @@ class SketchField extends PureComponent {
 
   state = {
     parentWidth: 550,
-    action: true
+    action: true,
+    left1: 0,
+    top1: 0 ,
+    scale1x: 0 ,    
+    scale1y: 0 ,    
+    width1: 0 ,
+    height1: 0 
   };
   _initTools = (fabricCanvas) => {
     this._tools = {};
@@ -120,6 +128,7 @@ class SketchField extends PureComponent {
     this._tools[Tool.Circle] = new Circle(fabricCanvas);
     this._tools[Tool.Pan] = new Pan(fabricCanvas);
     this._tools[Tool.DefaultTool] = new DefaultTool(fabricCanvas);
+    
   };
 
   /**
@@ -196,6 +205,8 @@ class SketchField extends PureComponent {
    */
   _onObjectMoving = (e) => {
     const {onObjectMoving} = this.props;
+    var object = e.target;
+    this.onObjectMove(object);
     onObjectMoving(e);
   };
 
@@ -204,8 +215,57 @@ class SketchField extends PureComponent {
    */
   _onObjectScaling = (e) => {
     const {onObjectScaling} = this.props;
+    var object = e.target;
+    this.onObjectResize(object);
     onObjectScaling(e);
   };
+
+  
+
+  onObjectResize(obj){
+    const { left1, top1, scale1x, scale1y, width1, height1 } = this.state;
+
+    obj.setCoords();
+    var brNew = obj.getBoundingRect();
+    
+    if (((brNew.width+brNew.left)>=obj.canvas.width) || ((brNew.height+brNew.top)>=obj.canvas.height) || ((brNew.left<0) || (brNew.top<0))) {
+    obj.left = left1;
+    obj.top=top1;
+    obj.scaleX=scale1x;
+    obj.scaleY=scale1y;
+    obj.width=width1;
+    obj.height=height1;
+  }
+    else{
+
+      this.setState({
+        left1: obj.left,
+        top1: obj.top,
+        scale1x: obj.scaleX,
+        scale1y: obj.scaleY,
+        width1: obj.width,
+        height1: obj.height
+      })
+    }
+  }
+
+  onObjectMove(obj){
+     // if object is too big ignore
+    if(obj.currentHeight > obj.canvas.height || obj.currentWidth > obj.canvas.width){
+      return;
+    }
+    obj.setCoords();
+    // top-left  corner
+    if(obj.getBoundingRect().top < 0 || obj.getBoundingRect().left < 0){
+      obj.top = Math.max(obj.top, obj.top-obj.getBoundingRect().top);
+      obj.left = Math.max(obj.left, obj.left-obj.getBoundingRect().left);
+    }
+    // bot-right corner
+    if(obj.getBoundingRect().top+obj.getBoundingRect().height  > obj.canvas.height || obj.getBoundingRect().left+obj.getBoundingRect().width  > obj.canvas.width){
+      obj.top = Math.min(obj.top, obj.canvas.height-obj.getBoundingRect().height+obj.top-obj.getBoundingRect().top);
+      obj.left = Math.min(obj.left, obj.canvas.width-obj.getBoundingRect().width+obj.left-obj.getBoundingRect().left);
+    }
+  }
 
   /**
    * Action when an object is rotating inside the canvas
