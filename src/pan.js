@@ -11,27 +11,27 @@ class Pan extends FabricCanvasTool {
     canvas.isDrawingMode = canvas.selection = false;
     canvas.forEachObject((o) => o.selectable = o.evented = false);
     //Change the cursor to the move grabber
-    canvas.defaultCursor = 'move';
+    canvas.defaultCursor = 'pointer';
   }
 
   doMouseDown(o) {
-    let canvas = this._canvas;
+    // let canvas = this._canvas;
     this.isDown = true;
-    let pointer = canvas.getPointer(o.e);
-    this.startX = pointer.x;
-    this.startY = pointer.y;
+    // let pointer = canvas.getPointer(o.e);
+    // this.startX = pointer.x;
+    // this.startY = pointer.y;
   }
 
   doMouseMove(o) {
     if (!this.isDown) return;
-    let canvas = this._canvas;
-    let pointer = canvas.getPointer(o.e);
+    // let canvas = this._canvas;
+    // let pointer = canvas.getPointer(o.e);
 
-    canvas.relativePan({
-      x: pointer.x - this.startX,
-      y: pointer.y - this.startY
-    });
-    canvas.renderAll();
+    // canvas.relativePan({
+    //   x: pointer.x - this.startX,
+    //   y: pointer.y - this.startY
+    // });
+    // canvas.renderAll();
   }
 
   doMouseUp(o) {

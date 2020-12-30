@@ -78,6 +78,10 @@ class SketchField extends PureComponent {
     onObjectScaling: PropTypes.func,
     // event object rotating
     onObjectRotating: PropTypes.func,
+    // event object mouse over
+    onObjectOver: PropTypes.func,
+    // event object mouse double click
+    onObjectDblClick: PropTypes.func,
     // Class name to pass to container div of canvas
     className: PropTypes.string,
     // Style options to pass to container div of canvas
@@ -105,6 +109,8 @@ class SketchField extends PureComponent {
     onObjectMoving:()=>null,
     onObjectScaling:()=>null,
     onObjectRotating:()=>null,
+    onObjectOver:()=>null,
+    onObjectDblClick:()=>null,
   };
 
   state = {
@@ -274,6 +280,20 @@ class SketchField extends PureComponent {
     const {onObjectRotating} = this.props;
     onObjectRotating(e);
   };
+
+  _onMouseOver = (e) => {
+    const {onObjectOver} = this.props;
+    if(e.target){
+      onObjectOver(e);
+    }
+  };
+
+  _onMouseDblClick = (e) => {
+    const {onObjectDblClick} = this.props;
+    if(e.target){
+      onObjectDblClick(e);
+    }
+  }
 
   _onObjectModified = (e) => {
     const {onObjectModified} = this.props;
@@ -717,8 +737,9 @@ class SketchField extends PureComponent {
   };
 
   callEvent = (e, eventFunction) => {
-    if(this._selectedTool)
+    if(this._selectedTool){
       eventFunction(e);
+    }
   }
 
   componentDidMount = () => {
@@ -763,6 +784,8 @@ class SketchField extends PureComponent {
     canvas.on('object:moving', e => this.callEvent(e, this._onObjectMoving));
     canvas.on('object:scaling', e => this.callEvent(e, this._onObjectScaling));
     canvas.on('object:rotating', e => this.callEvent(e, this._onObjectRotating));
+    canvas.on('mouse:over', e => this.callEvent(e, this._onMouseOver));
+    canvas.on('mouse:dblclick', e => this.callEvent(e, this._onMouseDblClick));
 
     this.disableTouchScroll();
 
