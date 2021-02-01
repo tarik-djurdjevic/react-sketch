@@ -751,11 +751,11 @@ class SketchField extends PureComponent {
       backgroundColor
     } = this.props;
 
-    let canvas = this._fc = new fabric.Canvas(this._canvas/*, {
-         preserveObjectStacking: false,
-         renderOnAddRemove: false,
-         skipTargetFind: true
-         }*/);
+    let canvas = this._fc = new fabric.Canvas(this._canvas, {
+        //  preserveObjectStacking: false,
+        //  renderOnAddRemove: false,
+        //  skipTargetFind: true,
+         });
 
     this._initTools(canvas);
 
